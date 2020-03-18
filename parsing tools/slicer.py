@@ -5,7 +5,9 @@ import soundfile as sf
 import librosa as lb
 import numpy as np
 import audioread
+import random
 import os
+
 
 def slice(path_in, path_out, **kwargs):
     sr = lb.get_samplerate(path_in)
