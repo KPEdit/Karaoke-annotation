@@ -11,7 +11,7 @@ import pickle
 import os
 
 
-def genAudioPices(path):
+def genForX(path):
     y, sr = lb.load(path)
     if sr != SAMPLE_RATE:
         y = lb.resample(y,sr,SAMPLE_RATE)
@@ -19,7 +19,7 @@ def genAudioPices(path):
     x = []
     for i in range(0,len(y),step):
         x.append(y[i:i+step])
-    print(len(x))
+    # print(len(x))
     return x
 
 def genForY(path):
@@ -45,8 +45,20 @@ def genForY(path):
                 print("text: ", d['text'])
                 print("end: ", d['end'])
                 print("max time: ",data[-1]['end'])
-    print(len(y))
+    # print(len(y))
     return y
+
+def getForXY():
+    m = os.listdir(MY_MUSIC_DIR)
+    s = os.listdir(MY_SUB_DIR)
+    a = []
+    b = []
+    for f in range(0,len(m)):
+        path_x = os.path.join(MY_MUSIC_DIR, m[f])
+        path_y = os.path.join(MY_SUB_DIR, s[f])
+        a.append(genForX(path_x))
+        b.append(genForY(path_y))
+    return a, b
 
 def main():
     m = os.listdir(MY_MUSIC_DIR)
@@ -54,9 +66,9 @@ def main():
     for f in range(0,len(m)):
         path_x = os.path.join(MY_MUSIC_DIR, m[f])
         path_y = os.path.join(MY_SUB_DIR, s[f])
-        a = genAudioPices(path_x)
+        a = genForX(path_x)
         b = genForY(path_y)
-        # print(a[0].shape)
+        print(a[0].shape)
 
 #
 # def slice(path_in, path_out, **kwargs):
