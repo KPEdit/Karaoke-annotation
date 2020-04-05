@@ -1,9 +1,10 @@
 from youtube_transcript_api import YouTubeTranscriptApi as YTTA
 from youtube_transcript_api._errors import TranscriptsDisabled
 from youtube_dl import YoutubeDL as YDL
-from options import RAW_DATA_DIR, RAW_SUBT_DIR
+from options import RAW_DATA_DIR, RAW_SUBT_DIR, SUBS_FORMAT
 import re
 import os
+import pickle
 
 
 def youtube_parse(url, cur):
@@ -16,22 +17,39 @@ def youtube_parse(url, cur):
 
     print(f"video_id = {video_id} for {url}")
     try:
-        l = YTTA.get_transcript(video_id, languages=['ru', 'en'])
+        l = YTTA.get_transcript(video_id, languages=['ru'])
     except TranscriptsDisabled:
         print(f"Video {url} has no subtitles.")
+    except:
+        pass
 
-    path = os.path.join(RAW_SUBT_DIR, f"{video_id}.txt")
-    with open(path, 'w', encoding='utf-8') as out:
-        out.write(str(l))
+    path = os.path.join(RAW_SUBT_DIR, f"{video_id}.{SUBS_FORMAT}")
+    with open(path, 'wb') as out:
+        pickle.dump(l, out)
 
     return 1
+
+
+def readSub(path):
+    with open(path, 'rb') as inp:
+        return pickle.load(inp)
+
+
+
+def readSubs():
+    subts = os.listdir(RAW_SUBT_DIR)
+    l = []
+    for i in range(len(subts)):
+        l.append(readSub(os.path.join(RAW_SUBT_DIR, subts[i])))
+    return l
+
 
 def youtube_download_audio(url):
     options = {
         'format': 'bestaudio/best',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
+            'preferredcodec': 'wav',
             'preferredquality': '192',
         }],
         'outtmpl':f'{RAW_DATA_DIR}/%(id)s.%(ext)s'
@@ -42,7 +60,10 @@ def youtube_download_audio(url):
 
 def youtube_audio_trs_parse(url, cur):
     if youtube_parse(url, cur):
-        youtube_download_audio(url)
+        try:
+            youtube_download_audio(url)
+        except:
+            pass
 
 def get_from_urls(path):
     l = []

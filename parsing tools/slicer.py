@@ -1,3 +1,4 @@
+from youtube_parser import readSub, readSubs
 from pydub import AudioSegment
 from options import *
 
