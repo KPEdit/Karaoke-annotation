@@ -11,7 +11,7 @@ MY_SUB_DIR = os.path.join(DATA_DIR, "my_subtitles")
 MY_MUSIC_DIR = os.path.join(DATA_DIR, "m")
 
 
-SLICE_TIME = 10 # seconds
+SLICE_TIME = 5 # seconds
 PARSE_ALL = True
 SAMPLE_RATE = 48000
 

@@ -10,6 +10,15 @@ import random
 import os
 
 
+def genAudioPices(path):
+    y, sr = lb.load(path)
+    if sr != SAMPLE_RATE:
+        y = lb.resample(y,sr,SAMPLE_RATE)
+    step = SLICE_TIME * SAMPLE_RATE
+    a = []
+    for i in range(0,len(y),step):
+        a.append(y[i:i+step])
+
 def slice(path_in, path_out, **kwargs):
     sr = lb.get_samplerate(path_in)
     a,_ = lb.load(path_in, sr=sr, **kwargs)
@@ -30,14 +39,20 @@ def slice(path_in, path_out, **kwargs):
                 a[1][n*time:]])
     lb.output.write_wav(out,b,sr)
 
-
-if __name__ == '__main__':
+def main_slice():
     raw_audios = os.listdir(RAW_DATA_DIR)
     if PARSE_ALL:
         for audio_name in raw_audios:
             audio_root = os.path.join(RAW_DATA_DIR, audio_name)
             slice(audio_root, SLICED_DIR, mono=False)
 
+
+if __name__ == '__main__':
+    d = os.listdir(MY_MUSIC_DIR)
+    for f in d:
+        path = os.path.join(MY_MUSIC_DIR, f)
+        a = genAudioPices(path)
+        print(a)
 
 
 
