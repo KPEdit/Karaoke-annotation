@@ -9,6 +9,7 @@ RESULTS_DIR = os.path.join(DATA_DIR, "Results")
 SUBS_FORMAT = r"subs"
 MY_SUB_DIR = os.path.join(DATA_DIR, "my_subtitles")
 MY_MUSIC_DIR = os.path.join(DATA_DIR, "m")
+IMAGE_DIR = os.path.join(DATA_DIR, "IMAGE_DIR")
 
 
 SLICE_TIME = 2 # seconds
